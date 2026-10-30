@@ -1,0 +1,190 @@
+class Node:
+    """A single node in a linked list."""
+
+    def __init__(self, value):
+        self.value = value   # The data this node holds
+        self.next = None     # Reference to the next node (None if this is the last item)
+
+    def __repr__(self):
+        return f"Node({self.value})"
+
+class LinkedList:
+    """A singly linked list."""
+
+    def __init__(self):
+        self.head = None  # The list starts empty
+
+    def insert_at_beginning(self, value):
+        """Add a new node at the front of the list. O(1) time."""
+        new_node = Node(value)
+        new_node.next = self.head  # New node points to the old head
+        self.head = new_node    # New node becomes the new head
+
+    def insert_at_end(self, value):
+        """Add a new node at the end of the list. O(n) time - must traverse to the end."""
+        new_node = Node(value)
+        if self.head is None:    # List is empty
+            self.head = new_node
+            return
+        current = self.head
+        while current.next:    # Walk to the last node
+            current = current.next
+        current.next = new_node  # Last node now points to the new node
+
+    def search(self, target):
+        """Find a value in the list. Returns True/False. O(n) time"""
+        current = self.head
+        while current:
+            if current.value == target:
+                return True
+            current = current.next  # Follow the pointer to the next node
+        return False
+
+    def display(self):
+        """Print the list in a readable format."""
+        elements = []
+        current = self.head
+        while current:
+            elements.append(str(current.value))
+            current = current.next
+            print(" -> ".join(elements) + " -> None")
+
+    def delete(self, target):
+        """Remove the first node with the given value. Return True if found, False if not."""
+        if self.head is None:
+            return False
+
+        # If the target is the head node
+        if self.head.value == target:
+            self.head = self.head.next
+            return True
+
+        # Traverse to find the node right before the target
+        current = self.head
+        while current.next: 
+            if current.next.value == target:
+                current.next = current.next.next # Bypass the target node
+                return True
+            current = current.next
+
+        return False
+
+    def length(self):
+        """Return the number of nodes in the list. O(n) time."""
+        count = 0
+        current = self.head
+        while current:
+            count += 1
+            current = current.next
+        return count
+
+    def to_list(self):
+        """Convert the linked list to a Python list. Returns a list of values."""
+        elements = []
+        current = self.head
+        while current:
+            elements.append(current.value)
+            current = current.next
+        return elements
+
+# Create a linked list and add some values
+
+my_list = LinkedList()
+my_list.insert_at_beginning(3)
+my_list.insert_at_beginning(2)
+my_list.insert_at_beginning(1)
+my_list.insert_at_end(4)
+
+my_list.display()
+# Output: 1 -> 2 -> 3 -> 4 -> None
+
+print(my_list.search(3))  # True
+print(my_list.search(99)) # False
+
+
+# A stack is just a list where you only use append() and pop()
+stack = []
+
+stack.append("page_1")   # Push: visit page 1
+stack.append("page_2")   # Push: visit page 2
+stack.append("page_3")   # Push: visit page 3
+
+print(stack)        # ['page_1', 'page_2', 'page_3']
+
+back = stack.pop()   # Pop: go back
+print(back)     # 'page_3' - the most recent page
+print(stack)    # ['page_1', 'page_2']
+
+
+def is_balanced(text):
+        """Return True if all brackets in text are properly matched. Handles: (), [], {}"""
+
+        stack = []
+        matching_bracket = {")": "(", "]": "[", "}": "{"}
+
+        for char in text:
+            if char in matching_bracket.values():
+                stack.append(char)
+            elif char in matching_bracket.keys():
+                # If stack is empty or top of stack doesn't match the opening pair
+                if not stack or stack.pop() != matching_bracket[char]:
+                    return False
+
+        # If stack is empty, all brackets matched successfully
+        return len(stack) == 0
+
+from collections import deque
+
+queue = deque()
+
+queue.append("customer_1")  # Enqueue: customer 1 joins the line
+queue.append("customer_2")  # Enqueue: customer 2 joins the line
+queue.append("customer_3")  # Enqueue: customer 3 joins the line
+
+print(queue)    # deque(['customer_1', 'customer_2', 'customer_3'])
+
+served = queue.popleft()   # dequeue: serve the first customer
+print(served)        #'customer_1' - first in, first out
+print(queue)        # dequeue(['customer_2', 'customer_3'])
+
+
+# A stack is just a list where you only use append() and pop()
+stack = []
+
+stack.append("page_1")   # Push: visit page 1
+stack.append("page_2")   # Push: visit page 2
+stack.append("page_3")   # Push: visit page 3
+
+print(stack)        # ['page_1', 'page_2', 'page_3']
+
+back = stack.pop()   # Pop: go back
+print(back)     # 'page_3' - the most recent page
+print(stack)    # ['page_1', 'page_2']
+
+
+from collections import deque
+
+
+class TaskProcessor:
+    """Simulates a task processor using a queue."""
+    def __init__(self):
+        self.tasks = deque()
+
+    def add_task(self, name):
+        """Add a task to the queue."""
+        self.tasks.append(name)
+
+    def process_next(self):
+        """Return the oldest unprocessed task (FIFO) or None if empty."""
+        if len(self.tasks) > 0:
+            return self.tasks.popleft()
+        return None
+
+
+
+# Tests:
+print(is_balanced("()"))      # True
+print(is_balanced("({[]})"))  # True
+print(is_balanced("(]"))      # False
+print(is_balanced("([)]"))    # False
+print(is_balanced("hello (world)"))  # True
